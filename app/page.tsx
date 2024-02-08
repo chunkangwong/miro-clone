@@ -1,9 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
-    <Button size="default" variant="outline">
-      Hello World
-    </Button>
+    <div className="flex flex-col gap-y-4">
+      <div>You are logged in</div>
+      <div>
+        <UserButton />
+      </div>
+    </div>
   );
 }
