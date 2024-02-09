@@ -1,21 +1,20 @@
 "use client";
 
-import type { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
-import { Link2, Pencil, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import { useApiMutation } from "@/hooks/useApiMutation";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useRenameModal } from "@/store/useRenameModal";
+import type { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
+import { Link2, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { ConfirmModal } from "./confirmModal";
 import { Button } from "./ui/button";
-import { useRenameModal } from "@/store/useRenameModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface ActionsProp {
   children: React.ReactNode;

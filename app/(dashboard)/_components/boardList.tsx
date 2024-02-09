@@ -65,7 +65,7 @@ export function BoardList({ orgId, query }: BoardListProps) {
             authorName={board.authorName}
             createdAt={board._creationTime}
             orgId={board.orgId}
-            isFavourite={false}
+            isFavourite={board.isFavourite}
           />
         ))}
       </div>
