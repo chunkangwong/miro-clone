@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 const images = [
   "/placeholders/1.svg",
@@ -165,6 +165,19 @@ export const unfavourite = mutation({
     }
 
     await ctx.db.delete(existingFavourite._id);
+
+    return board;
+  },
+});
+
+export const get = query({
+  args: { id: v.id("boards") },
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.id);
+
+    if (!board) {
+      throw new Error("Board not found");
+    }
 
     return board;
   },
