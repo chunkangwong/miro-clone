@@ -133,10 +133,6 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
   const handleResizeHandlePointerDown = useCallback(
     (corner: Side, initialBounds: XYWH) => {
-      console.log({
-        corner,
-        initialBounds,
-      });
       history.pause();
       setCanvasState({
         mode: CanvasMode.Resizing,

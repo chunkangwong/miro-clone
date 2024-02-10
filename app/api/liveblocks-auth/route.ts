@@ -22,13 +22,6 @@ export async function POST(request: Request) {
 
   const board = await convex.query(api.board.get, { id: room });
 
-  console.log("AUTH_INFO", {
-    room,
-    board,
-    boardOrgId: board?.orgId,
-    userOrgId: authorization.orgId,
-  });
-
   if (board?.orgId !== authorization.orgId) {
     return new Response("Unauthorized", { status: 403 });
   }
@@ -45,7 +38,6 @@ export async function POST(request: Request) {
   }
 
   const { status, body } = await session.authorize();
-  console.log({ status, body }, "ALLOWED");
 
   return new Response(body, { status });
 }
