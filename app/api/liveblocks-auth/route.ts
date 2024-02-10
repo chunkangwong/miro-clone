@@ -14,11 +14,6 @@ export async function POST(request: Request) {
   const authorization = auth();
   const user = await currentUser();
 
-  console.log("AUTH_INFO", {
-    authorization,
-    user,
-  });
-
   if (!authorization || !user) {
     return new Response("Unauthorized", { status: 403 });
   }
@@ -42,8 +37,6 @@ export async function POST(request: Request) {
     name: user.firstName || "Teammate",
     picture: user.imageUrl,
   };
-
-  console.log({ userInfo });
 
   const session = liveBlocks.prepareSession(user.id, { userInfo });
 
