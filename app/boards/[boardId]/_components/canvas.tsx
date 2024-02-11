@@ -31,6 +31,7 @@ import { Participants } from "./participants";
 import { SelectionBox } from "./selectionBox";
 import { Toolbar } from "./toolbar";
 import type { Side, XYWH } from "@/types/canvas";
+import { SelectionTools } from "./selectionTools";
 
 const MAX_LAYERS = 100;
 
@@ -283,6 +284,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         canUndo={canUndo}
         canRedo={canRedo}
       />
+      <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
       <svg
         className="h-[100vh] w-[100vw]"
         onWheel={handleWheel}
