@@ -2,13 +2,13 @@
 
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
+import { useDeleteLayers } from "@/hooks/useDeleteLayers";
 import { useSelectionBounds } from "@/hooks/useSelectionBounds";
 import { useMutation, useSelf } from "@/liveblocks.config";
 import { Camera, Color } from "@/types/canvas";
-import { Trash2 } from "lucide-react";
+import { BringToFront, SendToBack, Trash2 } from "lucide-react";
 import { memo } from "react";
 import { ColorPicker } from "./colorPicker";
-import { useDeleteLayers } from "@/hooks/useDeleteLayers";
 
 interface SelectionToolsProps {
   camera: Camera;
@@ -21,6 +21,51 @@ export const SelectionTools = memo(
 
     const deleteLayers = useDeleteLayers();
     const selectionBounds = useSelectionBounds();
+
+    const handleMoveToBack = useMutation(
+      ({ storage }) => {
+        const liveLayerIds = storage.get("layerIds");
+
+        const indices: number[] = [];
+
+        const arr = liveLayerIds.toArray();
+
+        for (let i = 0; i < arr.length; i++) {
+          if (selection.includes(arr[i])) {
+            indices.push(i);
+          }
+        }
+
+        for (let i = 0; i < indices.length; i++) {
+          liveLayerIds.move(indices[i], i);
+        }
+      },
+      [selection]
+    );
+
+    const handleMoveToFront = useMutation(
+      ({ storage }) => {
+        const liveLayerIds = storage.get("layerIds");
+
+        const indices: number[] = [];
+
+        const arr = liveLayerIds.toArray();
+
+        for (let i = 0; i < arr.length; i++) {
+          if (selection.includes(arr[i])) {
+            indices.push(i);
+          }
+        }
+
+        for (let i = indices.length - 1; i >= 0; i--) {
+          liveLayerIds.move(
+            indices[i],
+            arr.length - 1 - (indices.length - 1 - i)
+          );
+        }
+      },
+      [selection]
+    );
 
     const handleColorChange = useMutation(
       ({ storage }, fill: Color) => {
@@ -50,6 +95,18 @@ export const SelectionTools = memo(
         }}
       >
         <ColorPicker onChange={handleColorChange} />
+        <div className="flex flex-col gap-y-0.5">
+          <Hint label="Bring to front">
+            <Button variant="board" size="icon" onClick={handleMoveToFront}>
+              <BringToFront />
+            </Button>
+          </Hint>
+          <Hint label="Bring to back" side="bottom">
+            <Button variant="board" size="icon" onClick={handleMoveToBack}>
+              <SendToBack />
+            </Button>
+          </Hint>
+        </div>
         <div className="flex items-center pl-2 ml-2 border-l">
           <Hint label="Delete">
             <Button variant="board" size="icon" onClick={deleteLayers}>
