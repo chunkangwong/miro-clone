@@ -1,5 +1,7 @@
 "use client";
 
+import { useDeleteLayers } from "@/hooks/useDeleteLayers";
+import { useDisableScrollBounce } from "@/hooks/useDisableScrollBounce";
 import {
   colorToCss,
   connectionIdToColor,
@@ -17,6 +19,7 @@ import {
   useSelf,
   useStorage,
 } from "@/liveblocks.config";
+import type { Side, XYWH } from "@/types/canvas";
 import {
   Camera,
   CanvasMode,
@@ -27,16 +30,15 @@ import {
 } from "@/types/canvas";
 import { LiveObject } from "@liveblocks/client";
 import { nanoid } from "nanoid";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CursorPresence } from "./cursorPresence";
 import { Info } from "./info";
 import { LayerPreview } from "./layerPreview";
 import { Participants } from "./participants";
-import { SelectionBox } from "./selectionBox";
-import { Toolbar } from "./toolbar";
-import type { Side, XYWH } from "@/types/canvas";
-import { SelectionTools } from "./selectionTools";
 import { Path } from "./path";
+import { SelectionBox } from "./selectionBox";
+import { SelectionTools } from "./selectionTools";
+import { Toolbar } from "./toolbar";
 
 const MAX_LAYERS = 100;
 
@@ -74,6 +76,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     b: 255,
   });
 
+  useDisableScrollBounce();
   const history = useHistory();
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
@@ -401,6 +404,31 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     },
     [setCanvasState, camera, history, canvasState.mode]
   );
+
+  const deleteLayers = useDeleteLayers();
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      switch (e.key) {
+        case "z": {
+          if (e.ctrlKey || e.metaKey) {
+            if (e.shiftKey) {
+              history.redo();
+            } else {
+              history.undo();
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [history]);
 
   return (
     <main className="h-full w-full relative bg-neutral-100 touch-none">
