@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { Liveblocks } from "@liveblocks/node";
 import { api } from "@/convex/_generated/api";
 import { ConvexHttpClient } from "convex/browser";
@@ -10,7 +10,7 @@ const liveBlocks = new Liveblocks({
 });
 
 export async function POST(request: Request) {
-  const authorization = auth();
+  const authorization = await auth();
   const user = await currentUser();
 
   if (!authorization || !user) {
